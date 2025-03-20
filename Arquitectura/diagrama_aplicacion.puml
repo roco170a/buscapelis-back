@@ -1,0 +1,82 @@
+@startuml flujo_datos.puml
+!include <archimate/Archimate>
+
+
+rectangle "Flujo de Datos" as DataFlowGroup <<$archimate/driver>> {
+    ' Componentes del Backend
+    Business_Object(MovieEntity, "Entidad Película")
+    Business_Object(ActorEntity, "Entidad Actor")
+    Business_Object(GenreEntity, "Entidad Género")
+    Business_Object(UserEntity, "Entidad Usuario")
+}
+
+Grouping(BackendFlow, "Backend") {
+    ' Contiene componentes del backend
+    Application_Service(AuthService, "Servicio de Autenticación")
+    Application_Service(SearchService, "Servicio de Búsqueda")
+}
+
+' Agrupación para mejor visualización
+Grouping(FrontendFlow, "Frontend") {
+  ' Contiene componentes del frontend
+    Application_Component(UISearch, "Interfaz de Búsqueda")
+    Application_Component(UIResults, "Interfaz de Resultados")
+    Application_Component(UIAuth, "Interfaz de Autenticación")
+    ' Componentes del Frontend
+    Application_DataObject(SearchData, "Datos de Búsqueda")
+    Application_DataObject(ResultsData, "Datos de Resultados")
+    Application_DataObject(AuthData, "Datos de Autenticación")
+}
+
+
+Grouping(PersistenceFlow, "Almacenamiento de datos") {
+    ' Componentes de Persistencia
+    
+    Technology_Artifact(MovieTable, "Tabla Películas")
+    Technology_Artifact(ActorTable, "Tabla Actores")
+    Technology_Artifact(GenreTable, "Tabla Géneros")
+    Technology_Artifact(UserTable, "Tabla Usuarios")
+    Technology_Artifact(MovieActorTable, "Tabla Película_Actor")
+    Technology_Artifact(MovieGenreTable, "Tabla Película_Género")
+}
+
+Technology_SystemSoftware(DBMSSystem, "SQL Server")
+
+' Definición de actores principales
+Business_Actor(Usuario, "Usuario Final")
+Technology_Device(Dispositivo, "Dispositivo Cliente")
+
+' Flujo de autenticación
+Rel_Access_Down(Usuario, UIAuth, "Inicia sesión")
+Rel_Access_Down(UIAuth, AuthData, "Captura credenciales")
+Rel_Access_Down(AuthData, AuthService, "Envía datos")
+Rel_Access_Down(AuthService, UserEntity, "Valida usuario")
+Rel_Access_Down(UserEntity, UserTable, "Persiste")
+
+' Flujo de búsqueda de películas
+Rel_Access_Down(Usuario, UISearch, "Realiza búsqueda")
+Rel_Access_Down(UISearch, SearchData, "Captura criterios")
+Rel_Access(SearchData, SearchService, "Envía criterios")
+Rel_Access_Down(SearchService, MovieEntity, "Consulta películas")
+Rel_Access_Right(SearchService, ActorEntity, "Consulta actores")
+Rel_Access_Right(SearchService, GenreEntity, "Consulta géneros")
+Rel_Access_Down(MovieEntity, MovieTable, "Persiste")
+Rel_Access_Down(ActorEntity, ActorTable, "Persiste")
+Rel_Access_Down(GenreEntity, GenreTable, "Persiste")
+Rel_Access_Down(MovieEntity, MovieActorTable, "Relaciona")
+Rel_Access_Right(MovieEntity, MovieGenreTable, "Relaciona")
+
+' Flujo de resultados
+Rel_Access_Left(SearchService, ResultsData, "Devuelve resultados")
+Rel_Access_Down(ResultsData, UIResults, "Muestra resultados")
+Rel_Access_Up(UIResults, Usuario, "Visualiza")
+
+'Tablas a sql server
+Rel_Access_Down(MovieTable, DBMSSystem, "Persiste")
+Rel_Access_Down(ActorTable, DBMSSystem, "Persiste")
+Rel_Access_Down(GenreTable, DBMSSystem, "Persiste")
+Rel_Access_Down(UserTable, DBMSSystem, "Persiste")
+Rel_Access_Down(MovieActorTable, DBMSSystem, "Persiste")
+Rel_Access_Down(MovieGenreTable, DBMSSystem, "Persiste")
+
+@enduml 

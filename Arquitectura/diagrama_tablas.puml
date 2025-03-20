@@ -1,0 +1,101 @@
+@startuml modelo_datos_ie
+' Uso de sintaxis IE (Information Engineering) para el modelo de datos
+' https://plantuml.com/es/ie-diagram
+
+' Configuración del estilo
+skinparam linetype ortho
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+' Entidad Película
+entity "Película" as Movie {
+  * ID : integer <<PK>>
+  --
+  * Título : varchar(100)
+  * Año : integer
+  Sinopsis : varchar(500)
+  ImagenUrl : varchar(200)
+  FechaCreacion : datetime
+}
+
+' Entidad Actor
+entity "Actor" as Actor {
+  * ID : integer <<PK>>
+  --
+  * Nombre : varchar(100)
+  Biografía : varchar(500)
+  FotoUrl : varchar(200)
+  FechaCreacion : datetime
+}
+
+' Entidad Género
+entity "Género" as Genre {
+  * ID : integer <<PK>>
+  --
+  * Nombre : varchar(50)
+  FechaCreacion : datetime
+}
+
+' Usuario - ASP.NET Identity
+entity "ApplicationUser" as User {
+  * ID : nvarchar(450) <<PK>>
+  --
+  * UserName : nvarchar(256)
+  * Email : nvarchar(256)
+  Nombre : nvarchar(100)
+  FechaCreacion : datetime
+  PasswordHash : nvarchar(max)
+  SecurityStamp : nvarchar(max)
+  ConcurrencyStamp : nvarchar(max)
+  PhoneNumber : nvarchar(max)
+  ' Otros campos de Identity
+}
+
+' Entidad Rol - ASP.NET Identity
+entity "AspNetRoles" as Role {
+  * ID : nvarchar(450) <<PK>>
+  --
+  * Name : nvarchar(256)
+  * NormalizedName : nvarchar(256)
+  ConcurrencyStamp : nvarchar(max)
+}
+
+' Tabla de relación entre Usuario y Rol
+entity "AspNetUserRoles" as UserRole {
+  * UserID : nvarchar(450) <<FK>>
+  * RoleID : nvarchar(450) <<FK>>
+}
+
+' Tabla de relación entre Película y Actor
+entity "PeliculaActor" as MovieActor {
+  * PeliculaID : integer <<FK>>
+  * ActorID : integer <<FK>>
+  --
+  Personaje : varchar(max)
+}
+
+' Tabla de relación entre Película y Género
+entity "PeliculaGenero" as MovieGenre {
+  * PeliculaID : integer <<FK>>
+  * GeneroID : integer <<FK>>
+}
+
+' Definición de relaciones
+' Una película tiene muchos actores a través de la tabla de relación
+Movie ||--o{ MovieActor
+MovieActor }o--|| Actor
+
+' Una película tiene muchos géneros a través de la tabla de relación
+Movie ||--o{ MovieGenre
+MovieGenre }o--|| Genre
+
+' Usuario y roles
+User ||--o{ UserRole
+UserRole }o--|| Role
+
+' Título del diagrama
+title Modelo de Datos - API Películas
+
+@enduml 
