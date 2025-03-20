@@ -172,7 +172,7 @@ The frontend includes unit tests for components using Vitest and React Testing L
 
 ### Running Tests
 
-<img src="Arquitectura/test.jpg" alt="drawing" width="420"/>
+<img src="Arquitectura/Test.jpg" alt="drawing" width="420"/>
 
 To run the tests:
 
