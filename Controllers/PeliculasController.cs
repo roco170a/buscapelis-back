@@ -91,13 +91,12 @@ namespace apiPeliculas.Controllers
             await _unitOfWork.Pelicula.AddAsync(pelicula);
             await _unitOfWork.SaveAsync();
 
-            // Asignar géneros
+            // RCC Assign genres
             if (peliculaDTO.Generos != null && peliculaDTO.Generos.Any())
             {                
                 foreach (var generoDTO in peliculaDTO.Generos)
                 {   
-                    // RCC Assign genres
-                    // Intenta localizar el genero
+                    // RCC Try to locate the genre
                     var generoExistente = await _unitOfWork.Genero.GetByIdAsync(generoDTO.GeneroId);
                     if (generoExistente != null)
                     {
@@ -129,12 +128,12 @@ namespace apiPeliculas.Controllers
                 await _unitOfWork.SaveAsync();
             }
 
-            // Asignar actores
+            // RCC Assign actors
             if (peliculaDTO.Actores != null && peliculaDTO.Actores.Any())
             {
                 foreach (var actorDTO in peliculaDTO.Actores)
                 {   
-                    // Intenta localizar el actor
+                    // RCC Try to locate the actor
                     var actorExistente = await _unitOfWork.Actor.GetByIdAsync(actorDTO.ActorId);
                     if (actorExistente != null) {
                         var peliculaActor = new PeliculaActor
@@ -202,7 +201,7 @@ namespace apiPeliculas.Controllers
                 return NotFound(ApiResponse<string>.Error($"La película con ID {id} no existe"));
             }
 
-            // Asignar géneros
+            // RCC Assign genres
             if (peliculaDTO.Generos != null && peliculaDTO.Generos.Any())
             {
                 foreach (var generoDTO in peliculaDTO.Generos)
@@ -214,7 +213,7 @@ namespace apiPeliculas.Controllers
                         pelicula.PeliculaGeneros.Add(peliculaGeneroExistente);
                         continue;
                     } else {
-                        // Intenta localizar el genero
+                        // RCC Try to locate the genre
                         var generoExistente = await _unitOfWork.Genero.GetByIdAsync(generoDTO.GeneroId);
                         if (generoExistente != null)
                         {
@@ -246,7 +245,7 @@ namespace apiPeliculas.Controllers
                 await _unitOfWork.SaveAsync();
             }
 
-            // Asignar actores
+            // RCC Assign actors
             if (peliculaDTO.Actores != null && peliculaDTO.Actores.Any())
             {
                 foreach (var actorDTO in peliculaDTO.Actores)
@@ -258,7 +257,7 @@ namespace apiPeliculas.Controllers
                         pelicula.PeliculaActores.Add(peliculaActorExistente);
                         continue;
                     } else {
-                        // Intenta localizar el actor
+                        // RCC Try to locate the actor
                         var actorExistente = await _unitOfWork.Actor.GetByIdAsync(actorDTO.ActorId);
                         if (actorExistente != null)
                         {
@@ -291,7 +290,7 @@ namespace apiPeliculas.Controllers
                 await _unitOfWork.SaveAsync();
             }
 
-            // Actualizar campos de la película
+            // RCC Update movie fields
             pelicula.Titulo = peliculaDTO.Titulo;
             pelicula.Sinopsis = peliculaDTO.Sinopsis;
             pelicula.Anio = peliculaDTO.Anio;
