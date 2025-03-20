@@ -39,7 +39,7 @@ entity "Género" as Genre {
 }
 
 ' Usuario - ASP.NET Identity
-entity "ApplicationUser" as User {
+entity "AspNetUsers" as User {
   * ID : nvarchar(450) <<PK>>
   --
   * UserName : nvarchar(256)
